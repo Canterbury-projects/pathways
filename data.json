@@ -1,0 +1,65 @@
+{
+  "updated": "2026-11-17T07:00:00Z",
+  "items": [
+    {
+      "id": "ex-metro-south",
+      "title": "School-Based Traineeships in Healthcare",
+      "category": "Traineeships",
+      "org": "Metro South Health",
+      "closes": "2026-11-20",
+      "summary": "School-based traineeships in Administration, Assistant in Nursing and Pharmacy through Queensland Health.",
+      "years": [11, 12],
+      "links": [{ "label": "Queensland Health Careers", "url": "https://careers.health.qld.gov.au/" }],
+      "contact": "",
+      "example": true
+    },
+    {
+      "id": "ex-busy",
+      "title": "Apprenticeship Central",
+      "category": "Apprenticeships",
+      "org": "BUSY at Work",
+      "closes": "",
+      "summary": "Free job-matching site connecting students with employers looking for apprentices.",
+      "years": [10, 11, 12],
+      "links": [{ "label": "BUSY at Work", "url": "https://www.busyatwork.com.au/" }],
+      "contact": "",
+      "example": true
+    },
+    {
+      "id": "ex-fwe",
+      "title": "Full-Time Apprenticeship: Fitter & Turner",
+      "category": "Apprenticeships",
+      "org": "FWE Specialist Machining, Yatala",
+      "closes": "",
+      "summary": "Full-time fitter and turner apprenticeship for a school leaver interested in machining and engineering.",
+      "years": [12],
+      "links": [],
+      "contact": "See the Futures office for details",
+      "example": true
+    },
+    {
+      "id": "ex-tafe",
+      "title": "TAFE at School 2027",
+      "category": "VET Courses",
+      "org": "TAFE Queensland, Greater Brisbane",
+      "closes": "",
+      "summary": "Year 10 to 12 students can complete a certificate qualification while still at school, from construction and automotive to health and hospitality.",
+      "years": [10, 11, 12],
+      "links": [{ "label": "TAFE Queensland", "url": "https://tafeqld.edu.au/" }],
+      "contact": "You will need school approval before applying",
+      "example": true
+    },
+    {
+      "id": "ex-workexp",
+      "title": "Seeking Local Employers for Work Experience",
+      "category": "Work Experience",
+      "org": "Canterbury College Futures",
+      "closes": "",
+      "summary": "Know a business that could host a student for a week? Let the Futures team know.",
+      "years": [10, 11],
+      "links": [],
+      "contact": "",
+      "example": true
+    }
+  ]
+}

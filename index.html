@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Canterbury Pathway Opportunities</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Carlito:wght@400;700&display=swap">
+<style>
+/* ============ SETTINGS: James fills these in once ============ */
+</style>
+<script>
+const CONFIG = {
+  owner: "JJenkins-lab",
+  repo: "pathways",                     // the repository that hosts this site
+  branch: "main",
+  path: "data.json"                     // the data file inside the repo
+};
+</script>
+<style>
+:root{
+  --navy:#003461; --red:#C3122F;
+  --bg:#eef2f7; --surface:#ffffff; --surface-2:#f5f8fb; --line:#d6dee8;
+  --fg:#14202e; --muted:#5a6b80; --accent:#003461; --accent-fg:#ffffff;
+  --soon-bg:#fde8eb; --soon-fg:#a10f27; --ok-bg:#e6eef7; --ok-fg:#1f4a75;
+  --mast:#003461; --mast-fg:#ffffff; --mast-muted:#b9cbe0;
+  --font-head:"Arial Nova", Arial, "Helvetica Neue", sans-serif;
+  --font-body:Calibri, Carlito, "Segoe UI", sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0b1522; --surface:#132235; --surface-2:#0f1c2d; --line:#24384f;
+  --fg:#e7edf5; --muted:#93a6bd; --accent:#7fb2e6; --accent-fg:#06121f;
+  --soon-bg:#3a1520; --soon-fg:#ff8a9a; --ok-bg:#16304d; --ok-fg:#a9c9ec;
+  --mast:#06213d; --mast-fg:#ffffff; --mast-muted:#8fa9c6; color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.45}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.mast{background:var(--mast);color:var(--mast-fg);border-bottom:4px solid var(--red)}
+header.mast .wrap{padding-block:22px 20px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:16px;min-width:0}
+.crest{flex:none;width:72px;height:72px;background:#fff;border-radius:12px;padding:6px;display:grid;place-items:center}
+.crest img{max-width:100%;max-height:100%;display:block}
+@media (max-width:480px){.crest{width:56px;height:56px;padding:5px}}
+.eyebrow{font-family:var(--font-head);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mast-muted);margin:0 0 4px}
+h1{font-family:var(--font-head);font-weight:700;font-size:clamp(26px,4vw,36px);margin:0;text-wrap:balance}
+.mast p.sub{margin:6px 0 0;color:var(--mast-muted);max-width:60ch}
+.mast-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;border:1px solid transparent;border-radius:8px;padding:9px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:disabled{opacity:.6;cursor:default}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.btn-add{background:var(--red);color:#fff}
+.btn-ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn-primary{background:var(--accent);color:var(--accent-fg)}
+.adminbar{background:var(--soon-bg);color:var(--soon-fg);font-size:14px}
+.adminbar .wrap{padding-block:8px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.adminbar button{font:inherit;font-size:13px;background:none;border:1px solid currentColor;color:inherit;border-radius:6px;padding:3px 10px;cursor:pointer}
+
+.toolbar .wrap{padding-block:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.search{flex:1 1 220px;min-width:0;font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg)}
+select{font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.status{color:var(--muted);font-size:14px;margin-left:auto}
+
+.board-scroll{overflow-x:auto;padding-bottom:24px}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(290px,320px);gap:16px;align-items:start;padding-block:4px}
+@media (max-width:760px){.board{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:1fr}}
+.col{min-width:0;display:flex;flex-direction:column;gap:10px}
+.col-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:4px 2px 6px;border-bottom:2px solid var(--line)}
+.col-head h2{font-family:var(--font-head);font-size:17px;margin:0}
+.count{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.col-empty{color:var(--muted);font-size:14px;padding:10px 2px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card h3{font-family:var(--font-head);font-size:16px;line-height:1.25;margin:0;text-wrap:balance}
+.org{font-size:14px;color:var(--muted);margin:-4px 0 0}
+.summary{margin:0;font-size:15px;overflow-wrap:anywhere;white-space:pre-line}
+.meta{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font-size:12.5px;font-weight:700;border-radius:999px;padding:3px 9px;background:var(--ok-bg);color:var(--ok-fg);font-variant-numeric:tabular-nums}
+.pill.soon{background:var(--soon-bg);color:var(--soon-fg)}
+.pill.closed{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.pill.example{background:transparent;border:1px dashed var(--muted);color:var(--muted);font-weight:400}
+.links{display:flex;flex-direction:column;gap:3px}
+.links a{color:var(--accent);font-weight:700;font-size:14.5px;overflow-wrap:anywhere;text-underline-offset:2px}
+.contact{font-size:13.5px;color:var(--muted)}
+.card-actions{display:flex;gap:6px;justify-content:flex-end;border-top:1px solid var(--line);padding-top:8px;margin-top:2px}
+.card-actions button{font:inherit;font-size:13px;background:none;border:1px solid var(--line);color:var(--fg);border-radius:6px;padding:4px 10px;cursor:pointer}
+.card-actions .confirm{background:var(--red);color:#fff;border-color:var(--red)}
+
+.notice{background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:22px;color:var(--muted);max-width:640px;margin:20px 0}
+.notice strong{color:var(--fg)}
+footer{color:var(--muted);font-size:13px;padding-block:8px 28px}
+
+dialog{border:none;border-radius:12px;padding:0;width:min(560px,calc(100vw - 32px));background:var(--surface);color:var(--fg)}
+dialog::backdrop{background:rgba(5,15,30,.55)}
+.dlg-head{background:var(--mast);color:var(--mast-fg);padding:14px 18px;font-family:var(--font-head);font-weight:700;font-size:18px}
+form.edit{padding:16px 18px 18px;display:grid;gap:12px;max-height:78vh;overflow:auto}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:480px){.row2{grid-template-columns:1fr}}
+label{display:grid;gap:4px;font-size:14px;font-weight:700;min-width:0}
+label small,.help{font-weight:400;color:var(--muted);font-size:13.5px}
+form.edit input,form.edit textarea,form.edit select{font:inherit;font-weight:400;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--fg);width:100%}
+form.edit textarea{resize:vertical;min-height:70px}
+fieldset{border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:0}
+legend{font-size:14px;font-weight:700;padding:0 4px}
+.yrs{display:flex;gap:14px;flex-wrap:wrap}
+.yrs label{display:flex;align-items:center;gap:6px;font-weight:400}
+.yrs input{width:auto!important}
+.form-err{color:var(--soon-fg);font-size:14px;min-height:1em;margin:0}
+.dlg-actions{display:flex;gap:8px;justify-content:flex-end}
+.dlg-actions .btn-ghost{color:var(--fg);border-color:var(--line)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:700;z-index:20;max-width:calc(100vw - 32px)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="brand">
+      <div class="crest"><img alt="Canterbury College crest" src="data:image/png;base64,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"></div>
+      <div>
+      <p class="eyebrow">Canterbury College · Futures</p>
+      <h1>Pathway Opportunities</h1>
+      <p class="sub">Apprenticeships, traineeships, work experience, VET courses and early entry programs for Years 10 to 12.</p>
+      </div>
+    </div>
+    <div class="mast-actions">
+      <button class="btn btn-add" id="addBtn" hidden>+ Add opportunity</button>
+    </div>
+  </div>
+</header>
+
+<div class="adminbar" id="adminbar" hidden>
+  <div class="wrap">
+    <span id="adminMsg">Editing mode. Changes go live for students within a few minutes of saving.</span>
+    <span><button id="signOutBtn">Sign out of editing</button></span>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="wrap">
+    <input class="search" id="q" type="search" placeholder="Search opportunities, employers, courses" aria-label="Search">
+    <select id="yr" aria-label="Year level">
+      <option value="">All year levels</option>
+      <option value="10">Year 10</option>
+      <option value="11">Year 11</option>
+      <option value="12">Year 12</option>
+    </select>
+    <div class="chips">
+      <button class="chip" id="soonChip" aria-pressed="false">Closing in 14 days</button>
+      <button class="chip" id="closedChip" aria-pressed="false">Show closed</button>
+    </div>
+    <span class="status" id="status">Loading…</span>
+  </div>
+</div>
+
+<main class="wrap">
+  <div id="notice"></div>
+  <div class="board-scroll"><div class="board" id="board"></div></div>
+  <footer id="footer"></footer>
+</main>
+
+<!-- Editor sign-in -->
+<dialog id="signin">
+  <div class="dlg-head">Sign in to edit</div>
+  <form class="edit" id="signinForm" novalidate>
+    <p class="help" style="margin:0">Paste the editing key James gave you. You only need to do this once on this computer.</p>
+    <label>Editing key<input id="f-token" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+    <p class="form-err" id="signinErr" role="alert"></p>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost" id="signinCancel">Cancel</button>
+      <button type="submit" class="btn btn-primary" id="signinBtn">Sign in</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Add / edit -->
+<dialog id="dlg">
+  <div class="dlg-head" id="dlgTitle">Add opportunity</div>
+  <form class="edit" id="form" novalidate>
+    <label>Title<input id="f-title" maxlength="120" placeholder="e.g. School-based traineeship, Certificate III in Health"></label>
+    <div class="row2">
+      <label>Category<select id="f-cat"></select></label>
+      <label>Closes <small>leave blank if ongoing</small><input id="f-closes" type="date"></label>
+    </div>
+    <label>Organisation<input id="f-org" maxlength="100" placeholder="e.g. Metro South Health"></label>
+    <label>Description<textarea id="f-summary" maxlength="800" placeholder="Who it suits, what students get, how to apply"></textarea></label>
+    <fieldset><legend>Year levels</legend>
+      <div class="yrs">
+        <label><input type="checkbox" id="f-y10"> Year 10</label>
+        <label><input type="checkbox" id="f-y11"> Year 11</label>
+        <label><input type="checkbox" id="f-y12"> Year 12</label>
+      </div>
+    </fieldset>
+    <label>Links <small>one per line: Label | https://…</small><textarea id="f-links" placeholder="Apply now | https://example.org/apply"></textarea></label>
+    <label>Contact <small>optional</small><input id="f-contact" maxlength="120" placeholder="e.g. See the Futures office"></label>
+    <p class="form-err" id="formErr" role="alert"></p>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
+      <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+const CATS = ["Apprenticeships","Traineeships","Work Experience","VET Courses","University & Early Entry","Scholarships & Programs"];
+const $ = s => document.querySelector(s);
+const state = { items: [], updated: "", sha: null, q: "", yr: "", soon: false, closed: false, admin: false, token: "", editingId: null, confirmId: null, loaded: false, busy: false };
+const API = () => `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`;
+const KEY = "cc-pathways-key";
+
+CATS.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; $("#f-cat").appendChild(o); });
+
+/* ---------- helpers ---------- */
+function today(){ const d = new Date(); d.setHours(0,0,0,0); return d; }
+function daysLeft(s){ if(!s) return null; return Math.round((new Date(s + "T00:00:00") - today()) / 86400000); }
+function fmtDate(s){ return new Date(s + "T00:00:00").toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"numeric"}); }
+function safeUrl(u){ try{ const x = new URL(u); return (x.protocol === "https:" || x.protocol === "http:") ? x.href : null; }catch(e){ return null; } }
+function el(tag, cls, text){ const e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; }
+function toast(msg){ const t = el("div","toast",msg); document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
+function b64encode(str){ return btoa(unescape(encodeURIComponent(str))); }
+function b64decode(b64){ return decodeURIComponent(escape(atob(b64.replace(/\s/g,"")))); }
+function store(k, v){ try{ v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); }catch(e){} }
+function load(k){ try{ return localStorage.getItem(k) || ""; }catch(e){ return ""; } }
+function newId(){ return "o" + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+/* ---------- reading ---------- */
+async function loadPublic(){
+  // 1. data.json sitting next to this page (GitHub Pages). 2. Fallback: straight from the GitHub repo.
+  const urls = [CONFIG.path + "?v=" + Date.now(), `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${CONFIG.path}`];
+  for(const url of urls){
+    try{ const res = await fetch(url, { cache: "no-store" }); if(res.ok) return await res.json(); }catch(e){}
+  }
+  throw new Error("unavailable");
+}
+async function loadFromGitHub(){
+  const res = await fetch(API() + "?ref=" + encodeURIComponent(CONFIG.branch) + "&t=" + Date.now(), {
+    headers: { "Authorization": "Bearer " + state.token, "Accept": "application/vnd.github+json" }, cache: "no-store"
+  });
+  if(res.status === 401 || res.status === 403) { const e = new Error("auth"); e.code = "auth"; throw e; }
+  if(!res.ok) { const e = new Error("http " + res.status); e.code = res.status; throw e; }
+  const j = await res.json();
+  state.sha = j.sha;
+  return JSON.parse(b64decode(j.content));
+}
+function applyData(d){
+  state.items = Array.isArray(d.items) ? d.items : [];
+  state.updated = d.updated || "";
+  state.loaded = true;
+  render();
+}
+
+/* ---------- writing: re-read latest, change one item, save ---------- */
+async function commit(change, message){
+  for(let attempt = 0; attempt < 2; attempt++){
+    const latest = await loadFromGitHub();
+    const items = Array.isArray(latest.items) ? latest.items : [];
+    const next = { updated: new Date().toISOString(), items: change(items) };
+    const res = await fetch(API(), {
+      method: "PUT",
+      headers: { "Authorization": "Bearer " + state.token, "Accept": "application/vnd.github+json", "Content-Type": "application/json" },
+      body: JSON.stringify({ message, content: b64encode(JSON.stringify(next, null, 2) + "\n"), sha: state.sha, branch: CONFIG.branch })
+    });
+    if(res.status === 409 || res.status === 422) continue; // someone else saved at the same moment: re-read and retry once
+    if(res.status === 401 || res.status === 403){ const e = new Error("auth"); e.code = "auth"; throw e; }
+    if(!res.ok) throw new Error("http " + res.status);
+    const j = await res.json(); state.sha = j.content && j.content.sha;
+    applyData(next);
+    return;
+  }
+  throw new Error("conflict");
+}
+
+/* ---------- rendering ---------- */
+function visible(){
+  const q = state.q.trim().toLowerCase();
+  return state.items.filter(it => {
+    const dl = daysLeft(it.closes);
+    if(!state.closed && dl !== null && dl < 0) return false;
+    if(state.soon && (dl === null || dl < 0 || dl > 14)) return false;
+    if(state.yr && Array.isArray(it.years) && it.years.length && !it.years.includes(Number(state.yr))) return false;
+    if(q && ![it.title,it.org,it.summary,it.category].join(" ").toLowerCase().includes(q)) return false;
+    return true;
+  }).sort((a,b) => {
+    const k = d => d === null ? 99999 : (d < 0 ? 100000 - d : d);
+    return k(daysLeft(a.closes)) - k(daysLeft(b.closes)) || String(a.title).localeCompare(String(b.title));
+  });
+}
+
+function card(it){
+  const c = el("article","card");
+  c.appendChild(el("h3",null,it.title || "Untitled"));
+  if(it.org) c.appendChild(el("p","org",it.org));
+  const meta = el("div","meta"); const dl = daysLeft(it.closes);
+  if(dl === null) meta.appendChild(el("span","pill","Ongoing"));
+  else if(dl < 0) meta.appendChild(el("span","pill closed","Closed " + fmtDate(it.closes)));
+  else if(dl === 0) meta.appendChild(el("span","pill soon","Closes today"));
+  else meta.appendChild(el("span","pill" + (dl <= 14 ? " soon" : ""),"Closes " + fmtDate(it.closes) + " · " + dl + (dl === 1 ? " day" : " days")));
+  if(Array.isArray(it.years) && it.years.length) meta.appendChild(el("span","pill","Yr " + it.years.slice().sort().join(", ")));
+  if(it.example && state.admin) meta.appendChild(el("span","pill example","Example"));
+  c.appendChild(meta);
+  if(it.summary) c.appendChild(el("p","summary",it.summary));
+  const links = (Array.isArray(it.links) ? it.links : []).map(l => ({label:l.label, url:safeUrl(l.url)})).filter(l => l.url);
+  if(links.length){
+    const box = el("div","links");
+    links.forEach(l => { const a = el("a",null,(l.label || new URL(l.url).hostname) + " ↗"); a.href = l.url; a.target = "_blank"; a.rel = "noopener"; box.appendChild(a); });
+    c.appendChild(box);
+  }
+  if(it.contact) c.appendChild(el("div","contact",it.contact));
+  if(state.admin){
+    const act = el("div","card-actions");
+    const ed = el("button",null,"Edit"); ed.onclick = () => openForm(it); act.appendChild(ed);
+    if(state.confirmId === it.id){
+      const no = el("button",null,"Keep"); no.onclick = () => { state.confirmId = null; render(); };
+      const yes = el("button","confirm","Delete for good"); yes.onclick = () => remove(it.id);
+      act.append(no, yes);
+    } else { const del = el("button",null,"Delete"); del.onclick = () => { state.confirmId = it.id; render(); }; act.appendChild(del); }
+    c.appendChild(act);
+  }
+  return c;
+}
+
+function render(){
+  const board = $("#board"); board.textContent = ""; $("#notice").textContent = "";
+  const items = visible();
+  const open = state.items.filter(it => { const d = daysLeft(it.closes); return d === null || d >= 0; }).length;
+  $("#status").textContent = state.loaded ? `${items.length} shown · ${open} open` : "Loading…";
+  if(state.loaded && !state.items.length){
+    const n = el("div","notice"); n.appendChild(el("strong",null,"No opportunities yet. "));
+    n.appendChild(document.createTextNode(state.admin ? "Use Add opportunity to post the first one." : "Check back soon. The Futures team adds new opportunities here as they come in."));
+    $("#notice").appendChild(n);
+  }
+  CATS.forEach(cat => {
+    const list = items.filter(it => (CATS.includes(it.category) ? it.category : "Scholarships & Programs") === cat);
+    if(!list.length && (state.q || state.yr || state.soon)) return;
+    const col = el("section","col");
+    const h = el("div","col-head"); h.append(el("h2",null,cat), el("span","count",String(list.length)));
+    col.appendChild(h);
+    if(!list.length) col.appendChild(el("div","col-empty", state.loaded ? "Nothing open right now." : "Loading…"));
+    list.forEach(it => col.appendChild(card(it)));
+    board.appendChild(col);
+  });
+  $("#footer").textContent = state.updated ? "Last updated " + new Date(state.updated).toLocaleDateString("en-AU",{day:"numeric",month:"long",year:"numeric"}) : "";
+}
+
+/* ---------- editor ---------- */
+function openForm(it){
+  state.editingId = it ? it.id : null;
+  $("#dlgTitle").textContent = it ? "Edit opportunity" : "Add opportunity";
+  $("#f-title").value = it?.title || "";
+  $("#f-cat").value = it?.category || CATS[0];
+  $("#f-closes").value = it?.closes || "";
+  $("#f-org").value = it?.org || "";
+  $("#f-summary").value = it?.summary || "";
+  [10,11,12].forEach(y => $("#f-y"+y).checked = !!(it?.years || []).includes(y));
+  $("#f-links").value = (it?.links || []).map(l => (l.label ? l.label + " | " : "") + l.url).join("\n");
+  $("#f-contact").value = it?.contact || "";
+  $("#formErr").textContent = "";
+  $("#dlg").showModal(); $("#f-title").focus();
+}
+$("#addBtn").onclick = () => openForm(null);
+$("#cancelBtn").onclick = () => $("#dlg").close();
+
+function explain(err){
+  if(err.code === "auth") return "Your editing key has expired or isn't valid. Sign out of editing and ask James for a new key.";
+  if(err.message === "conflict") return "Someone else saved at the same moment. Try again.";
+  return "That didn't save. Check your internet connection and try again.";
+}
+
+$("#form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const title = $("#f-title").value.trim();
+  if(!title){ $("#formErr").textContent = "Add a title so students know what this is."; return; }
+  const links = []; let bad = "";
+  $("#f-links").value.split("\n").map(s => s.trim()).filter(Boolean).forEach(line => {
+    const parts = line.split("|"); const url = (parts.length > 1 ? parts.slice(1).join("|") : parts[0]).trim();
+    if(safeUrl(url)) links.push({ label: parts.length > 1 ? parts[0].trim() : "", url }); else if(!bad) bad = line;
+  });
+  if(bad){ $("#formErr").textContent = "Links need to start with https:// . Check this one: " + bad; return; }
+  const data = {
+    title, category: $("#f-cat").value, closes: $("#f-closes").value || "",
+    org: $("#f-org").value.trim(), summary: $("#f-summary").value.trim(),
+    years: [10,11,12].filter(y => $("#f-y"+y).checked), links, contact: $("#f-contact").value.trim()
+  };
+  const id = state.editingId;
+  $("#saveBtn").disabled = true; $("#saveBtn").textContent = "Saving…";
+  try{
+    await commit(items => id
+      ? items.map(it => it.id === id ? { ...it, ...data, example: false } : it)
+      : [...items, { id: newId(), ...data }],
+      (id ? "Edit: " : "Add: ") + title);
+    $("#dlg").close(); toast(id ? "Saved. Students will see it within a few minutes." : "Posted. Students will see it within a few minutes.");
+  }catch(err){ $("#formErr").textContent = explain(err); }
+  finally{ $("#saveBtn").disabled = false; $("#saveBtn").textContent = "Save"; }
+});
+
+async function remove(id){
+  const it = state.items.find(i => i.id === id);
+  try{ await commit(items => items.filter(i => i.id !== id), "Delete: " + (it?.title || id)); state.confirmId = null; render(); toast("Deleted"); }
+  catch(err){ state.confirmId = null; render(); toast(explain(err)); }
+}
+
+/* ---------- admin mode (open the page with #admin) ---------- */
+async function enterAdmin(){
+  state.token = load(KEY);
+  if(!state.token){ $("#signinErr").textContent = ""; $("#f-token").value = ""; $("#signin").showModal(); return; }
+  try{
+    applyData(await loadFromGitHub());
+    state.admin = true; $("#addBtn").hidden = false; $("#adminbar").hidden = false; render();
+  }catch(err){
+    if(err.code === "auth"){ store(KEY, null); state.token = ""; $("#signinErr").textContent = "That key didn't work. Check you copied all of it."; $("#signin").showModal(); }
+    else toast("Couldn't reach GitHub to load the editor. Check your connection.");
+  }
+}
+$("#signinForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const t = $("#f-token").value.trim();
+  if(!t){ $("#signinErr").textContent = "Paste your editing key first."; return; }
+  store(KEY, t); $("#signin").close(); enterAdmin();
+});
+$("#signinCancel").onclick = () => { $("#signin").close(); history.replaceState(null, "", location.pathname); };
+$("#signOutBtn").onclick = () => { store(KEY, null); state.admin = false; state.token = ""; $("#addBtn").hidden = true; $("#adminbar").hidden = true; history.replaceState(null, "", location.pathname); render(); };
+
+/* ---------- filters ---------- */
+$("#q").addEventListener("input", e => { state.q = e.target.value; render(); });
+$("#yr").addEventListener("change", e => { state.yr = e.target.value; render(); });
+$("#soonChip").onclick = e => { state.soon = !state.soon; e.currentTarget.setAttribute("aria-pressed", state.soon); render(); };
+$("#closedChip").onclick = e => { state.closed = !state.closed; e.currentTarget.setAttribute("aria-pressed", state.closed); render(); };
+
+/* ---------- start ---------- */
+render();
+loadPublic().then(applyData).catch(() => {
+  state.loaded = true; render();
+  const n = el("div","notice"); n.appendChild(el("strong",null,"Opportunities couldn't load. "));
+  n.appendChild(document.createTextNode("Refresh the page, or check back shortly."));
+  $("#notice").textContent = ""; $("#notice").appendChild(n);
+});
+if(location.hash === "#admin") enterAdmin();
+window.addEventListener("hashchange", () => { if(location.hash === "#admin" && !state.admin) enterAdmin(); });
+</script>
+</body>
+</html>
